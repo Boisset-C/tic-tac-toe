@@ -6,23 +6,25 @@
 */
 // 9 X 9 grid to create board
 function createGameBoard() {
+	const gameContainer = document.getElementById("game-container");
 	const rows = 3;
 	const columns = 3;
-	let board = [];
 
 	//creates board should be a 3 * 3 square
 	for (let i = 0; i < rows; i++) {
-		board[i] = [];
+		const row = document.createElement("div");
+		row.classList.add("row");
+		gameContainer.appendChild(row);
 		for (let j = 0; j < columns; j++) {
-			board[i][j] = "";
+			const cell = document.createElement("div");
+			cell.classList.add("column");
+			cell.textContent = "";
+			row.appendChild(cell);
 		}
 	}
-
-	return board;
 }
 
-let gameBoard = createGameBoard();
-console.log(gameBoard);
+createGameBoard();
 
 // player one { name: john smith, score: score, move: X }
 // player two { name: anne smith, score: score, move: O }
@@ -41,18 +43,18 @@ function makeMove(board, row, column, symbol) {
 	}
 }
 
-function game(board, playerOne, playerTwo) {
-	const newBoard = board;
-	const firstPlayer = playerOne;
-	const secondPlayer = playerTwo;
+// function game(board, playerOne, playerTwo) {
+// 	const newBoard = board;
+// 	const firstPlayer = playerOne;
+// 	const secondPlayer = playerTwo;
 
-	makeMove(newBoard, 1, 2, firstPlayer.symbol);
-	makeMove(newBoard, 1, 1, secondPlayer.symbol);
+// 	makeMove(newBoard, 1, 2, firstPlayer.symbol);
+// 	makeMove(newBoard, 1, 1, secondPlayer.symbol);
 
-	return newBoard;
-}
+// 	return newBoard;
+// }
 
-console.log("This is game board after one move", game(gameBoard, john, anne));
+// console.log("This is game board after one move", game(gameBoard, john, anne));
 
 //logic to keep track of turn and player move
 // moves will involve a 0 and X
