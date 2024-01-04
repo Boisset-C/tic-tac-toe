@@ -27,7 +27,37 @@ const playerManager = PlayerManager();
 
 // Creates player
 function createPlayer(name, symbol) {
-	return { name, symbol, score: 0, isTurn: false };
+	const { playerOne, playerTwo } = playerManager.getPlayers();
+
+	// Check if the symbol is already taken by the other player
+	if (
+		(playerOne && playerOne.symbol === symbol) ||
+		(playerTwo && playerTwo.symbol === symbol)
+	) {
+		if (playerOne && playerOne.symbol === "X") {
+			alert(
+				"Two players cant pick the same symbol, it was picked for you!"
+			);
+			return { name, symbol: "O", score: 0, isTurn: false };
+		} else if (playerOne && playerOne.symbol === "O") {
+			alert(
+				"Two players cant pick the same symbol, it was picked for you!"
+			);
+			return { name, symbol: "X", score: 0, isTurn: false };
+		} else if (playerTwo && playerTwo.symbol === "X") {
+			alert(
+				"Two players cant pick the same symbol, it was picked for you!"
+			);
+			return { name, symbol: "O", score: 0, isTurn: false };
+		} else if (playerTwo && playerTwo.symbol === "O") {
+			alert(
+				"Two players cant pick the same symbol, it was picked for you!"
+			);
+			return { name, symbol: "X", score: 0, isTurn: false };
+		}
+	} else {
+		return { name, symbol, score: 0, isTurn: false };
+	}
 }
 
 //Keeps track of current player move
