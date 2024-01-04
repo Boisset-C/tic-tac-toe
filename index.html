@@ -15,40 +15,34 @@
 
 		<div id="player-container">
 			<div class="player">
-				<form>
+				<form id="player1">
 					<h4>Player One</h4>
-					<label for="username">Username:</label>
-					<input type="text" />
-					<label for="x">X</label>
-					<input type="checkbox" id="X" />
-					<label for="O">O</label>
-					<input type="checkbox" id="O" />
+					<label for="username1">Username:</label>
+					<input type="text" id="username1" />
+					<label for="x1">X</label>
+					<input type="radio" name="symbol1" id="x1" value="X" />
+					<label for="o1">O</label>
+					<input type="radio" id="o1" value="O" name="symbol1" />
 					<button type="submit">Create User</button>
 				</form>
-				<!--
-				<p class="playerOne">Player One</p>
-				<h3 class="name">name: John</h3>
-				<p class="score">score: 0</p>
-				<p class="symbol">symbol: X</p>
-                -->
+				<div class="player-info d-none">
+					<p class="playerOne">Player One:</p>
+				</div>
 			</div>
 			<div class="player">
-				<form>
+				<form id="player2">
 					<h4>Player Two</h4>
-					<label for="username">Username:</label>
-					<input type="text" />
-					<label for="x">X</label>
-					<input type="checkbox" id="X" />
-					<label for="O">O</label>
-					<input type="checkbox" id="O" />
+					<label for="username2">Username:</label>
+					<input type="text" id="username2" />
+					<label for="x2">X</label>
+					<input type="radio" id="x2" name="symbol2" value="X" />
+					<label for="o2">O</label>
+					<input type="radio" id="o2" name="symbol2" value="O" />
 					<button type="submit">Create User</button>
 				</form>
-				<!--
-				<p class="playerTwo">Player Two</p>
-				<h3 class="name">name: Anne</h3>
-				<p class="score">score: 0</p>
-				<p class="symbol">symbol: O</p>
-                -->
+				<div class="player-info d-none">
+					<p class="playerTwo">Player Two:</p>
+				</div>
 			</div>
 		</div>
 

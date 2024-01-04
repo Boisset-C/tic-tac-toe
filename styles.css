@@ -44,3 +44,7 @@
 	margin: 1rem;
 	padding: 1rem;
 }
+
+.d-none {
+	display: none;
+}
