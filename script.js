@@ -2,6 +2,65 @@
 function PlayerManager() {
 	let players = { playerOne: null, playerTwo: null };
 
+	// player creation
+	function handleCreatePlayer(e) {
+		e.preventDefault();
+
+		//determine which player is being created
+		const playerBeingCreated = e.target.id;
+		console.log("This is form ID", playerBeingCreated);
+		//retrieve form values
+		const username = document.getElementById(
+			`username${playerBeingCreated.charAt(
+				playerBeingCreated.length - 1
+			)}`
+		).value;
+
+		const symbol = document.querySelector(
+			`input[name="symbol${playerBeingCreated.charAt(
+				playerBeingCreated.length - 1
+			)}"]:checked`
+		).value;
+
+		let player = playerManager.createPlayer(username, symbol);
+		playerManager.storePlayer(player, playerBeingCreated);
+
+		console.log(player);
+
+		//hide form
+		document.getElementById(playerBeingCreated).classList.add("d-none");
+
+		//show player info
+		const currentPlayerInfo =
+			document.getElementById(playerBeingCreated).nextElementSibling;
+		currentPlayerInfo.classList.remove("d-none");
+
+		//add player name
+		const currentUsername = document.createElement("p");
+		currentUsername.className = "name";
+		currentUsername.textContent = `name: ${player.name}`;
+		currentPlayerInfo.appendChild(currentUsername);
+
+		//add player symbol
+		const currentPlayerSymbol = document.createElement("p");
+		currentPlayerSymbol.className = "symbol";
+		currentPlayerSymbol.textContent = `symbol: ${player.symbol}`;
+		currentPlayerInfo.appendChild(currentPlayerSymbol);
+
+		//add player score
+		const currentPlayerScore = document.createElement("p");
+		currentPlayerScore.className = "score";
+		currentPlayerScore.textContent = `score: ${player.score}`;
+		currentPlayerInfo.appendChild(currentPlayerScore);
+	}
+
+	document
+		.getElementById("player1")
+		.addEventListener("submit", handleCreatePlayer);
+	document
+		.getElementById("player2")
+		.addEventListener("submit", handleCreatePlayer);
+
 	return {
 		storePlayer: function (player, formId) {
 			if (formId === "player1") {
@@ -20,48 +79,51 @@ function PlayerManager() {
 		getPlayers: function () {
 			return players;
 		},
+		createPlayer: function (name, symbol) {
+			// Check if the symbol is already taken by the other player
+			if (
+				(players.playerOne && players.playerOne.symbol === symbol) ||
+				(players.playerTwo && players.playerTwo.symbol === symbol)
+			) {
+				if (players.playerOne && players.playerOne.symbol === "X") {
+					alert(
+						"Two players cant pick the same symbol, it was picked for you!"
+					);
+					return { name, symbol: "O", score: 0, isTurn: false };
+				} else if (
+					players.playerOne &&
+					players.playerOne.symbol === "O"
+				) {
+					alert(
+						"Two players cant pick the same symbol, it was picked for you!"
+					);
+					return { name, symbol: "X", score: 0, isTurn: false };
+				} else if (
+					players.playerTwo &&
+					players.playerTwo.symbol === "X"
+				) {
+					alert(
+						"Two players cant pick the same symbol, it was picked for you!"
+					);
+					return { name, symbol: "O", score: 0, isTurn: false };
+				} else if (
+					players.playerTwo &&
+					players.playerTwo.symbol === "O"
+				) {
+					alert(
+						"Two players cant pick the same symbol, it was picked for you!"
+					);
+					return { name, symbol: "X", score: 0, isTurn: false };
+				}
+			} else {
+				return { name, symbol, score: 0, isTurn: false };
+			}
+		},
 	};
 }
 
-const playerManager = PlayerManager();
-
-// Creates player
-function createPlayer(name, symbol) {
-	const { playerOne, playerTwo } = playerManager.getPlayers();
-
-	// Check if the symbol is already taken by the other player
-	if (
-		(playerOne && playerOne.symbol === symbol) ||
-		(playerTwo && playerTwo.symbol === symbol)
-	) {
-		if (playerOne && playerOne.symbol === "X") {
-			alert(
-				"Two players cant pick the same symbol, it was picked for you!"
-			);
-			return { name, symbol: "O", score: 0, isTurn: false };
-		} else if (playerOne && playerOne.symbol === "O") {
-			alert(
-				"Two players cant pick the same symbol, it was picked for you!"
-			);
-			return { name, symbol: "X", score: 0, isTurn: false };
-		} else if (playerTwo && playerTwo.symbol === "X") {
-			alert(
-				"Two players cant pick the same symbol, it was picked for you!"
-			);
-			return { name, symbol: "O", score: 0, isTurn: false };
-		} else if (playerTwo && playerTwo.symbol === "O") {
-			alert(
-				"Two players cant pick the same symbol, it was picked for you!"
-			);
-			return { name, symbol: "X", score: 0, isTurn: false };
-		}
-	} else {
-		return { name, symbol, score: 0, isTurn: false };
-	}
-}
-
-//Keeps track of current player move
-function createTurnManager() {
+//Keeps track of current player
+function CreateTurnManager() {
 	let currentPlayer = null;
 
 	return {
@@ -80,112 +142,63 @@ function createTurnManager() {
 	};
 }
 
-// player creation
-function handleCreatePlayer(e) {
-	e.preventDefault();
+//Player actions and game actions
+function Game(playerOne, playerTwo, turnManager) {
+	//Game State
+	let gameBoard = [
+		[null, null, null],
+		[null, null, null],
+		[null, null, null],
+	];
 
-	//determine which player is being created
-	const playerBeingCreated = e.target.id;
-	console.log("This is form ID", playerBeingCreated);
-	//retrieve form values
-	const username = document.getElementById(
-		`username${playerBeingCreated.charAt(playerBeingCreated.length - 1)}`
-	).value;
+	//Allow player to move
+	function handlePlayerMove(cell, i, j) {
+		let currentPlayer = turnManager.getCurrentPlayer();
 
-	const symbol = document.querySelector(
-		`input[name="symbol${playerBeingCreated.charAt(
-			playerBeingCreated.length - 1
-		)}"]:checked`
-	).value;
-
-	let player = createPlayer(username, symbol);
-	playerManager.storePlayer(player, playerBeingCreated);
-
-	console.log(player);
-
-	//hide form
-	document.getElementById(playerBeingCreated).classList.add("d-none");
-
-	//show player info
-	const currentPlayerInfo =
-		document.getElementById(playerBeingCreated).nextElementSibling;
-	currentPlayerInfo.classList.remove("d-none");
-
-	//add player name
-	const currentUsername = document.createElement("p");
-	currentUsername.className = "name";
-	currentUsername.textContent = `name: ${player.name}`;
-	currentPlayerInfo.appendChild(currentUsername);
-
-	//add player symbol
-	const currentPlayerSymbol = document.createElement("p");
-	currentPlayerSymbol.className = "symbol";
-	currentPlayerSymbol.textContent = `symbol: ${player.symbol}`;
-	currentPlayerInfo.appendChild(currentPlayerSymbol);
-
-	//add player score
-	const currentPlayerScore = document.createElement("p");
-	currentPlayerScore.className = "score";
-	currentPlayerScore.textContent = `score: ${player.score}`;
-	currentPlayerInfo.appendChild(currentPlayerScore);
-}
-
-document
-	.getElementById("player1")
-	.addEventListener("submit", handleCreatePlayer);
-document
-	.getElementById("player2")
-	.addEventListener("submit", handleCreatePlayer);
-
-//Tic Tac Toe
-/*
-[[],[],[]]
-[[],[],[]]
-[[],[],[]]
-*/
-// 9 X 9 grid to create board
-function createGameBoard(turnManager, playerOne, playerTwo) {
-	const gameContainer = document.getElementById("game-container");
-	const rows = 4;
-	const columns = 4;
-
-	//creates board should be a 3 * 3 square
-	for (let i = 1; i < rows; i++) {
-		const row = document.createElement("div");
-		row.classList.add("row");
-		gameContainer.appendChild(row);
-		for (let j = 1; j < columns; j++) {
-			const cell = document.createElement("p");
-			cell.classList.add("column");
-			cell.textContent = "";
-			cell.id = `row${i}col${j}`;
-			//add event listener to each cell
-			cell.addEventListener("click", function () {
-				handlePlayerMove(cell, turnManager, playerOne, playerTwo);
-			});
-
-			row.appendChild(cell);
+		if (gameBoard[i][j] === null) {
+			gameBoard[i][j] = currentPlayer.symbol;
+			cell.textContent = currentPlayer.symbol;
+			// Add logic to check for win condition here
+			turnManager.switchPlayer(playerOne, playerTwo);
+		} else {
+			console.log("Cell has already been filled.");
 		}
 	}
+
+	return {
+		createGameBoard: function () {
+			const gameContainer = document.getElementById("game-container");
+			gameContainer.innerHTML = ""; // Clear previous board
+
+			//creates board should be a 3 * 3 square
+			for (let i = 0; i < 3; i++) {
+				const row = document.createElement("div");
+				row.classList.add("row");
+				gameContainer.appendChild(row);
+				for (let j = 0; j < 3; j++) {
+					const cell = document.createElement("p");
+					cell.classList.add("column");
+					cell.textContent = "";
+					cell.id = `row${i}col${j}`;
+					//add event listener to each cell
+					cell.addEventListener("click", function () {
+						handlePlayerMove(cell, i, j);
+					});
+
+					row.appendChild(cell);
+				}
+			}
+		},
+	};
 }
 
-//Allow player to move
-function handlePlayerMove(cell, turnManager, playerOne, playerTwo) {
-	let currentPlayer = turnManager.getCurrentPlayer();
+//Game loop
+function game(players) {
+	let turnManager = CreateTurnManager();
+	turnManager.setPlayer(players.playerOne); // Set initial player
 
-	if (cell.textContent === "") {
-		cell.textContent = currentPlayer.symbol;
-		turnManager.switchPlayer(playerOne, playerTwo);
-	} else {
-		console.log("Cell has already been filled.");
-	}
+	const gameManager = Game(players.playerOne, players.playerTwo, turnManager);
+	gameManager.createGameBoard();
 }
 
-function game() {
-	const { playerOne, playerTwo } = playerManager.getPlayers();
-
-	let turnManager = createTurnManager();
-
-	turnManager.setPlayer(playerOne); // set initial player
-	createGameBoard(turnManager, playerOne, playerTwo);
-}
+const playerManager = PlayerManager();
